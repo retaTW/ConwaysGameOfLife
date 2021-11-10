@@ -1,17 +1,20 @@
 CC = g++
-CFLAGS = -Wall -std=c++14 -O3
+CFLAGS = -std=c++17
 EXE = main.exe
 SRC = $(wildcard ./*.cpp)
 OBJ = $(patsubst %.cpp, %.o, $(SRC))
+DEP = .dependency
 
-.PHONY: all clean
+.PHONY: all clean dep
 
 all: $(OBJ)
-	$(CC) $(CFLAGS) -o $(EXE) $(OBJ)
+	$(CC) -o $(EXE) $(OBJ)
 
-%.o:%.c
-	$(CC) $(CFLAGS) -c $<
+dep:
+	$(CC) -MM $(SRC) > .dependency
 
 clean:
-	rm -f *.o *.exe
+	rm -f *.o *.exe $(DEP)
 	
+%.o: %.cpp
+	$(CC) -c $(CFLAGS) -o $@ $<
