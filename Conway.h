@@ -23,17 +23,24 @@ public:
     ConwayLifeGame& operator=(ConwayLifeGame&&) = delete;
 
     void start();
+    void set_drug(bool are_you_high);
 private:
     using int8_t = char;
 
     enum State { DEAD, ALIVE, WALL };
 
+    // board and life
     std::vector<std::vector<int8_t>> _boards[2];
     int8_t _current_board_num;
     int _num_row;
     int _num_col;
     double _life_ratio;
+
+    // flags
     bool _verbose;
+    bool _drug;
+
+    // animation
     int _iter_times;
     int _sleep_millisec;
 

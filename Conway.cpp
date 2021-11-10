@@ -10,11 +10,32 @@
 
 using namespace std;
 
+namespace {
+    const char* titles[] = {
+                        "_________                                     /\\        ________                        ________   _____  .____    .__  _____       \n"
+                        "\\_   ___ \\  ____   ______  _  _______  ___.__.)/_____  /  _____/_____    _____   ____   \\_____  \\_/ ____\\ |    |   |__|/ ____\\____  \n"
+                        "/    \\  \\/ /  _ \\ /    \\ \\/ \\/ /\\__  \\<   |  |/  ___/ /   \\  ___\\__  \\  /     \\_/ __ \\   /   |   \\   __\\  |    |   |  \\   __\\/ __ \\ \n"
+                        "\\     \\___(  <_> )   |  \\     /  / __ \\\\___  |\\___ \\  \\    \\_\\  \\/ __ \\|  Y Y  \\  ___/  /    |    \\  |    |    |___|  ||  | \\  ___/ \n"
+                        " \\______  /\\____/|___|  /\\/\\_/  (____  / ____/____  >  \\______  (____  /__|_|  /\\___  > \\_______  /__|    |_______ \\__||__|  \\___  >\n"
+                        "        \\/            \\/             \\/\\/         \\/          \\/     \\/      \\/     \\/          \\/                \\/             \\/ "
+                        ,
+                        "   _____           _     _ _        _____                         ____   __   _      _  __     \n"
+                        "  / ____|         (_)   | ( )      / ____|                       / __ \\ / _| | |    (_)/ _|    \n"
+                        " | |     _____   ___  __| |/ ___  | |  __  __ _ _ __ ___   ___  | |  | | |_  | |     _| |_ ___ \n"
+                        " | |    / _ \\ \\ / / |/ _` | / __| | | |_ |/ _` | '_ ` _ \\ / _ \\ | |  | |  _| | |    | |  _/ _ \\\n"
+                        " | |___| (_) \\ V /| | (_| | \\__ \\ | |__| | (_| | | | | | |  __/ | |__| | |   | |____| | ||  __/\n"
+                        "  \\_____\\___/ \\_/ |_|\\__,_| |___/  \\_____|\\__,_|_| |_| |_|\\___|  \\____/|_|   |______|_|_| \\___|\n"
+                        "                                                                                               "
+    };
+
+    enum Title { GENERAL, COVID };
+}
+
 ConwayLifeGame::ConwayLifeGame(int num_row, int num_col,
                                double life_ratio, bool verbose,
                                int iter_times, int sleep_millisec)
         : _current_board_num(0), _num_row(num_row), _num_col(num_col),
-          _life_ratio(life_ratio), _verbose(verbose),
+          _life_ratio(life_ratio), _verbose(verbose), _drug(false),
           _iter_times(iter_times), _sleep_millisec(sleep_millisec) {
     // +2 for the edges of board
     // cell position index is from 1 to the number of rows/columns
@@ -66,6 +87,10 @@ void ConwayLifeGame::start() {
     }
     // TODO: this shouldn't be placed here, but not working in _keystroke_dectect, fix later
     ::keyboard_recovery();
+}
+
+void ConwayLifeGame::set_drug(bool high) {
+    _drug = high;
 }
 
 void ConwayLifeGame::_update() {
@@ -123,16 +148,27 @@ void ConwayLifeGame::_show() {
     for (auto& row : current_board) {
         for (auto& cell : row) {
             switch (cell) {
-            case DEAD:
-                cout << " ";
-                break;
-            case ALIVE:
-                cout << "\033[7m \033[0m";
-                break;
-
-            case WALL:
-                cout << "X";
-                break;
+                case DEAD: {
+                    cout << " ";
+                    break;
+                }
+                case ALIVE: {
+                    cout << "\033[7m \033[0m";
+                    break;
+                }
+                case WALL: {
+                    static const char* colors[] = {"41", "1;43", "43", "42", "46", "44", "45"};
+                    static int color_index = 0;
+                    if (_drug) {
+                        cout << "\033[" << colors[color_index++] << "m \033[0m";
+                        color_index %= 7;
+                        //cout << "\033[1;" << 40 + ::rand()%10 << "m \033[0m";
+                    }
+                    else {
+                        cout << "\033[7m+\033[0m";
+                    }
+                    break;
+                }
             }
         }
         cout << endl;
@@ -140,20 +176,17 @@ void ConwayLifeGame::_show() {
 }
 
 void ConwayLifeGame::_show_setting() {
-    cout << "\033[1;4mLength:\033[0m " << _num_row << endl
-         << "\033[1;4mWidth:\033[0m  " << _num_col << endl
+    cout << "\033[1;4mLength\033[0m: " << _num_row << endl
+         << "\033[1;4mWidth\033[0m:  " << _num_col << endl
          << "\033[0m";
 }
 
 void ConwayLifeGame::_show_title() {
-    cout << "\033[33m"
-            "_________                                     /\\        ________                        ________   _____  .____    .__  _____       \n"
-            "\\_   ___ \\  ____   ______  _  _______  ___.__.)/_____  /  _____/_____    _____   ____   \\_____  \\_/ ____\\ |    |   |__|/ ____\\____  \n"
-            "/    \\  \\/ /  _ \\ /    \\ \\/ \\/ /\\__  \\<   |  |/  ___/ /   \\  ___\\__  \\  /     \\_/ __ \\   /   |   \\   __\\  |    |   |  \\   __\\/ __ \\ \n"
-            "\\     \\___(  <_> )   |  \\     /  / __ \\\\___  |\\___ \\  \\    \\_\\  \\/ __ \\|  Y Y  \\  ___/  /    |    \\  |    |    |___|  ||  | \\  ___/ \n"
-            " \\______  /\\____/|___|  /\\/\\_/  (____  / ____/____  >  \\______  (____  /__|_|  /\\___  > \\_______  /__|    |_______ \\__||__|  \\___  >\n"
-            "        \\/            \\/             \\/\\/         \\/          \\/     \\/      \\/     \\/          \\/                \\/             \\/ "
-            "\033[0m" << endl;
+    if (_drug) {
+        cout << "\033[33;1;41m";
+    }
+    cout << ::titles[GENERAL]
+         << "\033[0m" << endl;
 }
 
 void ConwayLifeGame::_keystroke_detect() {
@@ -167,6 +200,14 @@ void ConwayLifeGame::_keystroke_detect() {
             cout << "\033[2J\033[0;0H";
             // TODO: this doesn't work here, fix later
             // ::keyboard_recovery();
+        }
+        // DRUG ON/OFF
+        else if (key == 'd') {
+            _drug = !_drug;
+            if (_verbose) {
+                cout << "\033[2J\033[0;0H";
+                _show_title();
+            }
         }
     }
     return;
