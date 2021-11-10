@@ -22,3 +22,7 @@ $ ./main.exe
 ## Note
 
 * Please ensure the size of terminal/console is large enough to show the animation.
+
+## Drug version
+
+![1](Conway.gif)
