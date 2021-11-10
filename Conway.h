@@ -18,10 +18,10 @@ public:
     ConwayLifeGame(const std::vector<std::pair<int, int>>& life_loc_list) {
     }
     */
-    
+
     ConwayLifeGame& operator=(const ConwayLifeGame&) = delete;
     ConwayLifeGame& operator=(ConwayLifeGame&&) = delete;
-    
+
     void start();
 private:
     using int8_t = char;

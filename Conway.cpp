@@ -1,4 +1,5 @@
 #include "Conway.h"
+#include "conio.h" // a cross-platform <conio.h> for both linux and windows
 
 #include <iostream>
 #include <cstdlib>
@@ -6,8 +7,6 @@
 
 #include <thread>
 #include <chrono>
-
-#include <conio.h> // only for windows
 
 using namespace std;
 
@@ -49,7 +48,7 @@ ConwayLifeGame::ConwayLifeGame(int num_row, int num_col,
 void ConwayLifeGame::start() {
     cout << "\033[?25l";
     cout << "\033[2J\033[0;0H";
-    while (_iter_times--) {    
+    while (_iter_times--) {
         cout << "\033[s";
         _show();
         _update();
@@ -57,6 +56,8 @@ void ConwayLifeGame::start() {
         cout << "\033[u";
         _keystroke_detect();
     }
+    // TODO: this shouldn't be placed here, but not working in _keystroke_dectect, fix later
+    ::keyboard_recovery();
 }
 
 void ConwayLifeGame::_update() {
@@ -86,7 +87,7 @@ void ConwayLifeGame::_update() {
                 }
             }
             else {
-                // unreachable now
+                //
             }
         }
     }
@@ -120,7 +121,7 @@ void ConwayLifeGame::_show() {
             case ALIVE:
                 cout << "\033[7m \033[0m";
                 break;
-            
+
             case WALL:
                 cout << " ";
                 break;
@@ -131,13 +132,16 @@ void ConwayLifeGame::_show() {
 }
 
 void ConwayLifeGame::_keystroke_detect() {
-    while (::_kbhit()) {
-        char key = ::_getch();
+    while (::keyboard_hit()) {
+        char key = ::get_char();
         if (key == 'r') {
             _randomly_set();
         }
-        else if (key == '?') {
-            
+        else if (key == 'f') {
+            _iter_times = 0;
+            cout << "\033[2J\033[0;0H";
+            // TODO: this doesn't work here, fix later
+            // ::keyboard_recovery();
         }
     }
     return;
@@ -162,5 +166,3 @@ void ConwayLifeGame::_randomly_set() {
         cell = ALIVE;
     }
 }
-
-
