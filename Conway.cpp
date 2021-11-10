@@ -11,10 +11,10 @@
 using namespace std;
 
 ConwayLifeGame::ConwayLifeGame(int num_row, int num_col,
-                               double life_ratio, int iter_times,
-                               int sleep_millisec)
+                               double life_ratio, bool verbose,
+                               int iter_times, int sleep_millisec)
         : _current_board_num(0), _num_row(num_row), _num_col(num_col),
-          _life_ratio(life_ratio),
+          _life_ratio(life_ratio), _verbose(verbose),
           _iter_times(iter_times), _sleep_millisec(sleep_millisec) {
     // +2 for the edges of board
     // cell position index is from 1 to the number of rows/columns
@@ -38,19 +38,24 @@ ConwayLifeGame::ConwayLifeGame(int num_row, int num_col,
 
     // Edge wall
     for (int i = 0; i <= _num_row + 1; i++) {
-        init_board[i][0] = init_board[i][_num_col+1] = WALL;
+        _boards[0][i][0] = _boards[0][i][_num_col+1] = _boards[1][i][0] = _boards[1][i][_num_col+1] = WALL;
     }
     for (int i = 0; i <= _num_col + 1; i++) {
-        init_board[0][i] = init_board[_num_row+1][i] = WALL;
+        _boards[0][0][i] = _boards[0][_num_row+1][i] = _boards[1][0][i] = _boards[1][_num_row+1][i] = WALL;
     }
 }
 
 void ConwayLifeGame::start() {
     cout << "\033[?25l";
     cout << "\033[2J\033[0;0H";
+    cout << "\033[s";
+    
     while (_iter_times--) {
-        cout << "\033[s";
         _show();
+        if (_verbose) {
+            _show_setting();
+           //this_thread::sleep_for(std::chrono::milliseconds(2000));
+        }
         _update();
         this_thread::sleep_for(std::chrono::milliseconds(_sleep_millisec));
         cout << "\033[u";
@@ -123,12 +128,18 @@ void ConwayLifeGame::_show() {
                 break;
 
             case WALL:
-                cout << " ";
+                cout << "X";
                 break;
             }
         }
         cout << endl;
     }
+}
+
+void ConwayLifeGame::_show_setting() {
+    cout << "\033[1;4mLength:\033[0m " << _num_row << endl
+         << "\033[1;4mWidth:\033[0m  " << _num_col << endl
+         << "\033[0m";
 }
 
 void ConwayLifeGame::_keystroke_detect() {

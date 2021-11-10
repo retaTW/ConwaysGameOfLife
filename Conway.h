@@ -8,8 +8,8 @@
 class ConwayLifeGame {
 public:
     ConwayLifeGame(int num_row = 33, int num_col = 100,
-                   double life_ratio = 0.1, int iter_times = -1,
-                   int sleep_millisec = 100);
+                   double life_ratio = 0.1, bool verbose = true,
+                   int iter_times = -1, int sleep_millisec = 100);
 
     ConwayLifeGame(const ConwayLifeGame&) = delete;
     ConwayLifeGame(ConwayLifeGame&&) = delete;
@@ -33,12 +33,14 @@ private:
     int _num_row;
     int _num_col;
     double _life_ratio;
+    bool _verbose;
     int _iter_times;
     int _sleep_millisec;
 
     void _update();
     int _count_alive_neighbor(int row, int col);
     void _show();
+    void _show_setting();
     void _keystroke_detect();
     void _randomly_set();
 };
