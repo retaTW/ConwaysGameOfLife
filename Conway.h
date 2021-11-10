@@ -7,7 +7,7 @@
 
 class ConwayLifeGame {
 public:
-    ConwayLifeGame(int num_row = 33, int num_col = 100,
+    ConwayLifeGame(int num_row = 30, int num_col = 130,
                    double life_ratio = 0.1, bool verbose = true,
                    int iter_times = -1, int sleep_millisec = 100);
 
@@ -41,6 +41,7 @@ private:
     int _count_alive_neighbor(int row, int col);
     void _show();
     void _show_setting();
+    void _show_title();
     void _keystroke_detect();
     void _randomly_set();
 };
