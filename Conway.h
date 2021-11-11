@@ -8,8 +8,8 @@
 class ConwayLifeGame {
 public:
     ConwayLifeGame(int num_row = 30, int num_col = 130,
-                   double life_ratio = 0.1, bool verbose = true,
-                   int iter_times = -1, int sleep_millisec = 100);
+                   double life_ratio = 0.2, bool verbose = true,
+                   int iter_times = -1, int sleep_millisec = 200);
 
     ConwayLifeGame(const ConwayLifeGame&) = delete;
     ConwayLifeGame(ConwayLifeGame&&) = delete;
@@ -27,7 +27,7 @@ public:
 private:
     using int8_t = char;
 
-    enum State { DEAD, ALIVE, WALL };
+    enum State { DEAD, ALIVE, EDGE };
 
     // board and life
     std::vector<std::vector<int8_t>> _boards[2];
@@ -39,6 +39,7 @@ private:
     // flags
     bool _verbose;
     bool _drug;
+    bool _circular;
 
     // animation
     int _iter_times;

@@ -3,7 +3,7 @@
 
 int main() {
     std::cout.sync_with_stdio(false);
-    ConwayLifeGame game;
+    ConwayLifeGame game(30, 130);
     game.start();
 
     return 0;

@@ -2,13 +2,13 @@
 
 Just Conway's Game of Life supporting on both linux and windows platform
 
-## Compilation
+## Build
 
 ```sh
 $ make clean all
 ```
 
-## Execution
+## Run
 
 ```sh
 $ ./main.exe
@@ -16,8 +16,14 @@ $ ./main.exe
 
 ## Runtime keyboard function
 
-* **r** : Restarting the game randomly
-* **f** : Finishing the game
+* **r** : restart the game randomly
+* **f** : finish the game
+* **d** : **DRUG MODE ON/OFF**
+* **v** : verbose mode on/off
+* **c** : circular plane mode on/off
+* `SPACE` : pause the game
+* **\+** : speed up
+* **\-** : speed down
 
 ## Note
 

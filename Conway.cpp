@@ -35,7 +35,7 @@ ConwayLifeGame::ConwayLifeGame(int num_row, int num_col,
                                double life_ratio, bool verbose,
                                int iter_times, int sleep_millisec)
         : _current_board_num(0), _num_row(num_row), _num_col(num_col),
-          _life_ratio(life_ratio), _verbose(verbose), _drug(false),
+          _life_ratio(life_ratio), _verbose(verbose), _drug(false), _circular(false),
           _iter_times(iter_times), _sleep_millisec(sleep_millisec) {
     // +2 for the edges of board
     // cell position index is from 1 to the number of rows/columns
@@ -57,12 +57,12 @@ ConwayLifeGame::ConwayLifeGame(int num_row, int num_col,
         cell = ALIVE;
     }
 
-    // Edge wall
+    // Edge
     for (int i = 0; i <= _num_row + 1; i++) {
-        _boards[0][i][0] = _boards[0][i][_num_col+1] = _boards[1][i][0] = _boards[1][i][_num_col+1] = WALL;
+        _boards[0][i][0] = _boards[0][i][_num_col+1] = _boards[1][i][0] = _boards[1][i][_num_col+1] = EDGE;
     }
     for (int i = 0; i <= _num_col + 1; i++) {
-        _boards[0][0][i] = _boards[0][_num_row+1][i] = _boards[1][0][i] = _boards[1][_num_row+1][i] = WALL;
+        _boards[0][0][i] = _boards[0][_num_row+1][i] = _boards[1][0][i] = _boards[1][_num_row+1][i] = EDGE;
     }
 }
 
@@ -133,10 +133,23 @@ inline int ConwayLifeGame::_count_alive_neighbor(int row, int col) {
     auto& current_board = _boards[_current_board_num];
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
+            int nb_row = row + i;
+            int nb_col = col + j;
+            if (_circular) {
+                if (nb_row < 1)
+                    nb_row = _num_row;
+                else if (nb_row > _num_row)
+                    nb_row = 1;
+
+                if (nb_col < 1)
+                    nb_col = _num_col;
+                else if (nb_col > _num_col)
+                    nb_col = 1;
+            }
             // itself, not neighbor
             if (i == 0 && j == 0)
                 continue;
-            if (current_board[row+i][col+j] == ALIVE)
+            if (current_board[nb_row][nb_col] == ALIVE)
                 count++;
         }
     }
@@ -156,7 +169,7 @@ void ConwayLifeGame::_show() {
                     cout << "\033[7m \033[0m";
                     break;
                 }
-                case WALL: {
+                case EDGE: {
                     static const char* colors[] = {"41", "1;43", "43", "42", "46", "44", "45"};
                     static int color_index = 0;
                     if (_drug) {
@@ -164,8 +177,11 @@ void ConwayLifeGame::_show() {
                         color_index %= 7;
                         //cout << "\033[1;" << 40 + ::rand()%10 << "m \033[0m";
                     }
+                    else if (_circular) {
+                        cout << "\033[1;42mO\033[0m";
+                    }
                     else {
-                        cout << "\033[7m+\033[0m";
+                        cout << "\033[1;41mX\033[0m";
                     }
                     break;
                 }
@@ -176,9 +192,23 @@ void ConwayLifeGame::_show() {
 }
 
 void ConwayLifeGame::_show_setting() {
-    cout << "\033[1;4mLength\033[0m: " << _num_row << endl
-         << "\033[1;4mWidth\033[0m:  " << _num_col << endl
-         << "\033[0m";
+    cout << "\033[1;4mLength\033[0m:   " << _num_row << " | "
+         << "\033[1;4mWidth\033[0m:    " << _num_col << " | "
+         << "\033[1;4mCircular\033[0m: " << ((_circular)? "on ":"off") << endl;
+
+    cout << "\033[1;4mSpeed\033[0m:  ";
+    if (_sleep_millisec <= 100) {
+        cout << "\033[1;37;41mFAST\033[0m  ";
+    }
+    else if (_sleep_millisec <= 300) {
+        cout << "MIDDLE";
+    }
+    else {
+        cout << "\033[37;42mSLOW\033[0m  ";
+    }
+    cout << endl;
+
+    cout << "\033[0m";
 }
 
 void ConwayLifeGame::_show_title() {
@@ -192,22 +222,48 @@ void ConwayLifeGame::_show_title() {
 void ConwayLifeGame::_keystroke_detect() {
     while (::keyboard_hit()) {
         char key = ::get_char();
+        // restart
         if (key == 'r') {
             _randomly_set();
         }
+        // finish
         else if (key == 'f') {
             _iter_times = 0;
             cout << "\033[2J\033[0;0H";
             // TODO: this doesn't work here, fix later
             // ::keyboard_recovery();
         }
-        // DRUG ON/OFF
+        // DRUG MODE ON/OFF
         else if (key == 'd') {
             _drug = !_drug;
             if (_verbose) {
                 cout << "\033[2J\033[0;0H";
                 _show_title();
             }
+        }
+        // verbose mode on/off
+        else if (key == 'v') {
+            _verbose = ! _verbose;
+            cout << "\033[2J\033[0;0H";
+            if (_verbose) {
+                _show_title();
+            }
+            cout << "\033[s";
+        }
+        else if (key == 'c') {
+            _circular = ! _circular;
+        }
+        // speed up
+        else if (key == '+') {
+            _sleep_millisec -= (_sleep_millisec > 50)? 50 : _sleep_millisec;
+        }
+        // speed down
+        else if (key == '-') {
+            _sleep_millisec += (_sleep_millisec+50 > 500)? (500 - _sleep_millisec) : 50;
+        }
+        // pause
+        else if (key == ' ') {
+            ::get_char();
         }
     }
     return;
