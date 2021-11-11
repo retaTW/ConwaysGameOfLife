@@ -1,6 +1,6 @@
 # ConwaysGameOfLife
 
-Just Conway's Game of Life supporting on both linux and windows platform
+Just Conway's Game of Life.
 
 ## Build
 
@@ -28,6 +28,10 @@ $ ./main.exe
 ## Note
 
 * Please ensure the size of terminal/console is large enough to show the animation.
+* **On Windows, please don't use built-in terminal.** \
+  **Windows Terminal by Microsoft Corporation‬ is recommended.**\
+  [github](https://github.com/microsoft/terminal)\
+  [Microsoft Store](https://www.microsoft.com/zh-tw/p/windows-terminal/9n0dx20hk701)
 
 ## Drug version
 
