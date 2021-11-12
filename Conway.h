@@ -42,16 +42,19 @@ private:
     bool _circular;
 
     // animation
-    int _iter_times;
+    const int _init_iter_times;
+    int _current_iter_times;
     int _sleep_millisec;
 
     void _update();
     int _count_alive_neighbor(int row, int col);
-    void _show();
+    void _show_board();
     void _show_setting();
     void _show_title();
     void _keystroke_detect();
-    void _randomly_set();
+    void _randomly_set_board();
+    void _set_board();
+    void _list_template();
 };
 
 #endif

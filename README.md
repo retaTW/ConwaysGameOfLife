@@ -16,14 +16,14 @@ $ ./main.exe
 
 ## Runtime keyboard function
 
-* **r** : restart the game randomly
-* **f** : finish the game
-* **d** : **DRUG MODE ON/OFF**
-* **v** : verbose mode on/off
-* **c** : circular plane mode on/off
+* `r` : restart the game randomly
+* `f` : finish the game
+* `d` : **DRUG MODE ON/OFF**
+* `v` : verbose mode on/off
+* `c` : circular board mode on/off
 * `SPACE` : pause the game
-* **\+** : speed up
-* **\-** : speed down
+* `+/-` : speed up/down
+* `↑/↓/←/→` : resize the board
 
 ## Notes
 
