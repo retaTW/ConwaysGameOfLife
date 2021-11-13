@@ -16,6 +16,8 @@ $ ./main.exe
 
 ## Runtime keyboard function
 
+### Show mode (default):
+
 * `r` : restart the game randomly
 * `f` : finish the game
 * `d` : **DRUG MODE ON/OFF**
@@ -24,6 +26,13 @@ $ ./main.exe
 * `SPACE` : pause the game
 * `+/-` : speed up/down
 * `↑/↓/←/→` : resize the board
+* s : change to canvas mode (set life mode)
+
+### Canvas mode:
+
+* `↑/↓/←/→` : move
+* k : kill all lifes
+* `SPACE` : set/reset life
 
 ## Notes
 

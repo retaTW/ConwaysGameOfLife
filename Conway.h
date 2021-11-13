@@ -34,12 +34,15 @@ private:
     int8_t _current_board_num;
     int _num_row;
     int _num_col;
+    int _canvas_row;
+    int _canvas_col;
     double _life_ratio;
 
     // flags
     bool _verbose;
     bool _drug;
     bool _circular;
+    bool _canvas;
 
     // animation
     const int _init_iter_times;
@@ -49,12 +52,13 @@ private:
     void _update();
     int _count_alive_neighbor(int row, int col);
     void _show_board();
-    void _show_setting();
+    void _show_attribute();
     void _show_title();
+    void _resize_board();
     void _keystroke_detect();
     void _randomly_set_board();
-    void _set_board();
-    void _list_template();
+    void _set_life();
+    void _kill_all();
 };
 
 #endif
