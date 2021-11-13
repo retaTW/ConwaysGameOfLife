@@ -26,13 +26,14 @@ $ ./main.exe
 * `SPACE` : pause the game
 * `+/-` : speed up/down
 * `↑/↓/←/→` : resize the board
-* s : change to canvas mode (set life mode)
+* `s` : change to canvas mode (set life mode)
 
 ### Canvas mode:
 
 * `↑/↓/←/→` : move
-* k : kill all lifes
+* `k` : kill all lifes
 * `SPACE` : set/reset life
+* `s` : change to show mode
 
 ## Notes
 
